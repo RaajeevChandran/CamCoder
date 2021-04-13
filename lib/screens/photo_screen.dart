@@ -119,7 +119,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
             ),
             Spacer(),
             GFButton(
-              onPressed: openEditor,
+              onPressed: _image == null ? null : openEditor,
               fullWidthButton: true,
               shape: GFButtonShape.pills,
               color: Constants.barBackgroundColor,

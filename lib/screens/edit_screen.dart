@@ -186,12 +186,14 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                             child: CircularProgressIndicator(),
                           ),
                         ),
-                        Text(
-                          _execOutput,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'RobotoMono',
+                        FittedBox(
+                          child: Text(
+                            _execOutput,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'RobotoMono',
+                            ),
                           ),
                         ),
                       ],
@@ -224,7 +226,11 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
       setState(() {
         print(response.data);
         isExecutingCode = false;
-        _execOutput = response.data["output"].toString();
+        if (response.data["output"] != "") {
+          _execOutput = response.data["output"].toString();
+        } else {
+          _execOutput = response.data["errors"].toString();
+        }
       });
     }
   }
