@@ -12,18 +12,23 @@ class EditArguments {
   EditArguments(this.ocrResult);
 }
 
-class EditScreen extends StatelessWidget {
-  static final String routeName = "/edit";
-  String ocrResult = "Error";
+class EditScreen extends StatefulWidget {
+  final String ocrResult;
+  EditScreen({this.ocrResult});
+  @override
+  _EditScreenState createState() => _EditScreenState();
+}
+
+class _EditScreenState extends State<EditScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final EditArguments routeParams = ModalRoute.of(context).settings.arguments;
-    try {
-      ocrResult = routeParams.ocrResult;
-    } catch (e) {
-      print(e);
-    }
-    return DemoCodeEditor(ocrResult);
+    return DemoCodeEditor(widget.ocrResult);
   }
 }
 
@@ -98,8 +103,8 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                       child: Container(
                         margin: EdgeInsets.all(24.0),
                         padding: EdgeInsets.all(24.0),
-                        decoration:
-                            new BoxDecoration(border: new Border.all(color: Colors.grey)),
+                        decoration: new BoxDecoration(
+                            border: new Border.all(color: Colors.grey)),
                         child: RichCodeField(
                           autofocus: true,
                           controller: _rec,
@@ -110,7 +115,8 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                           onChanged: (String s) {},
                           onBackSpacePress: (TextEditingValue oldValue) {},
                           onEnterPress: (TextEditingValue oldValue) {
-                            var result = _syntaxHighlighterBase.onEnterPress(oldValue);
+                            var result =
+                                _syntaxHighlighterBase.onEnterPress(oldValue);
                             if (result != null) {
                               _rec.value = result;
                             }

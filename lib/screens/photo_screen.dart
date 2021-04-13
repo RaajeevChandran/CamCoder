@@ -7,6 +7,7 @@ import 'package:platform_action_sheet/platform_action_sheet.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import "package:http/http.dart" as http;
 
 class PhotoScreen extends StatefulWidget {
   static const routeName = '/photo';
@@ -17,24 +18,21 @@ class PhotoScreen extends StatefulWidget {
 class _PhotoScreenState extends State<PhotoScreen> {
   File _image;
   String _ocrResult;
+  bool processing = false;
 
   String _selectedLanguage = "Javascript";
 
   Future getImage(ImageSource source, BuildContext context) async {
-    Dio dio = new Dio();
-    var image = await ImagePicker.pickImage(source: source);
+    final result = await ImagePicker.platform.pickImage(source: source);
     Navigator.pop(context);
-    FormData formData = new FormData.fromMap({
-      "image": await MultipartFile.fromFile(
-        image.path,
-        filename: image.path.split('/').last,
-      ),
-    });
-    var response = await dio.post("https://photo-code-web.herokuapp.com/scan", data: formData);
-    setState(() {
-      _image = image;
-      _ocrResult = response.data["code"].toString();
-    });
+    if (result != null) {
+      print("file picked");
+      File file = File(result.path);
+
+      setState(() {
+        _image = file;
+      });
+    }
   }
 
   void openSheet() {
@@ -50,12 +48,32 @@ class _PhotoScreenState extends State<PhotoScreen> {
     ]);
   }
 
-  void openEditor() {
-    Navigator.pushNamed(
-      context, 
-      EditScreen.routeName,
-      arguments: EditArguments(_ocrResult),
-    );
+  void openEditor() async {
+    setState(() {
+      processing = true;
+    });
+    String result = await ocrResult();
+    setState(() {
+      processing = false;
+    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditScreen(
+                  ocrResult: result,
+                )));
+  }
+
+  Future<String> ocrResult() async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('https://camcoderapi.herokuapp.com/api/ocr'));
+    request.files.add(await http.MultipartFile.fromPath('file', _image.path));
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      return await response.stream.bytesToString();
+    } else {
+      return "";
+    }
   }
 
   void changeLanguage(String newSelection) {
@@ -85,7 +103,9 @@ class _PhotoScreenState extends State<PhotoScreen> {
                 color: Colors.black,
                 borderRadius: BorderRadius.all(Radius.circular(40)),
               ),
-              child: _image != null ? Image.file(_image, fit: BoxFit.contain) : null,
+              child: _image != null
+                  ? Image.file(_image, fit: BoxFit.contain)
+                  : null,
             ),
             Spacer(),
             GFButton(
@@ -94,31 +114,36 @@ class _PhotoScreenState extends State<PhotoScreen> {
               shape: GFButtonShape.pills,
               color: Constants.barBackgroundColor,
               size: GFSize.LARGE,
-              child: Text("Select Image", style: TextStyle(color: Constants.accentColor)),
+              child: Text("Select Image",
+                  style: TextStyle(color: Constants.accentColor)),
             ),
             Spacer(),
             GFButton(
-              onPressed: openEditor, 
+              onPressed: openEditor,
               fullWidthButton: true,
               shape: GFButtonShape.pills,
               color: Constants.barBackgroundColor,
               size: GFSize.LARGE,
-              child: Text("Process Image", style: TextStyle(color: Constants.accentColor)),
+              child: processing
+                  ? CircularProgressIndicator()
+                  : Text("Process Image",
+                      style: TextStyle(color: Constants.accentColor)),
             ),
             Spacer(),
             DropdownButton<String>(
-              value: _selectedLanguage,
-              dropdownColor: Constants.barBackgroundColor,
-              items: <String>['Javascript', 'More coming soon...'].map((String value) {
-                return new DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Constants.accentColor)),
-                );
-              }).toList(),
-              onChanged: (newSelection) {
-                changeLanguage(newSelection); 
-              }
-            ),
+                value: _selectedLanguage,
+                dropdownColor: Constants.barBackgroundColor,
+                items: <String>['Javascript', 'More coming soon...']
+                    .map((String value) {
+                  return new DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value,
+                        style: TextStyle(color: Constants.accentColor)),
+                  );
+                }).toList(),
+                onChanged: (newSelection) {
+                  changeLanguage(newSelection);
+                }),
             Spacer(flex: 4),
           ],
         ),

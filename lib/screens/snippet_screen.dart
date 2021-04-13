@@ -1,3 +1,4 @@
+import 'package:camcoder/screens/edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/theme_map.dart';
@@ -58,7 +59,7 @@ class SnippetScreen extends StatelessWidget {
               Spacer(flex: 3),
               GFButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/edit");
+                  Navigator.push(context,MaterialPageRoute(builder:(context)=>EditScreen()));
                 },
                 color: GFColors.PRIMARY,
                 text: "Edit",

@@ -61,12 +61,7 @@ class MyApp extends StatelessWidget {
           overline: TextStyle(fontFamily: 'NotoSans'),
         ),
       ),
-      home: Demo(),
-      routes: {
-        LoginScreen.routeName: (context) => LoginScreen(),
-        MainScreen.routeName: (context) => MainScreen(),
-        EditScreen.routeName: (context) => EditScreen(),
-      },
+      home: MainScreen(),
     );
   }
 }
@@ -87,11 +82,11 @@ class _DemoState extends State<Demo> {
           onPressed: () async {
             // ignore: invalid_use_of_visible_for_testing_member
             final result = await ImagePicker.platform
-                .pickImagePath(source: ImageSource.gallery);
+                .pickImage(source: ImageSource.gallery);
 
             if (result != null) {
               print("file picked");
-              File file = File(result);
+              File file = File(result.path);
 
               var request = http.MultipartRequest('POST',
                   Uri.parse('https://camcoderapi.herokuapp.com/api/decode'));
