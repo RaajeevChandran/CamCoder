@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:rich_code_editor/exports.dart';
+import "package:http/http.dart" as http;
 
 import '../constants.dart';
 import '../syntax_highlighter.dart';
@@ -42,6 +43,7 @@ class DemoCodeEditor extends StatefulWidget {
 class _DemoCodeEditorState extends State<DemoCodeEditor> {
   RichCodeEditingController _rec;
   SyntaxHighlighterBase _syntaxHighlighterBase;
+  bool isExecutingCode = false;
 
   final String ocrResult;
   String _codeToExec;
@@ -175,6 +177,15 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                             color: Colors.white,
                           ),
                         ),
+                        SizedBox(height: 30),
+                        Visibility(
+                          visible: isExecutingCode,
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
                         Text(
                           _execOutput,
                           textAlign: TextAlign.left,
@@ -198,9 +209,13 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
   String _execOutput = "";
 
   Future executeCode() async {
+    setState(() {
+      isExecutingCode = true;
+      _execOutput = "";
+    });
     Dio dio = new Dio();
     var response = await dio.post(
-      "https://photo-code-web.herokuapp.com/run",
+      "https://camcoderapi.herokuapp.com/api/run",
       data: {
         "code": _rec.text,
       },
@@ -208,6 +223,7 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
     if (this.mounted) {
       setState(() {
         print(response.data);
+        isExecutingCode = false;
         _execOutput = response.data["output"].toString();
       });
     }
