@@ -67,7 +67,8 @@ class SnippetScreen extends StatelessWidget {
               ),
               Spacer(),
               GFButton(
-                onPressed: () {},
+                onPressed: () {
+                },
                 color: GFColors.SUCCESS,
                 text: "Execute",
                 icon: Icon(FontAwesomeIcons.code),
