@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import "package:http/http.dart" as http;
 import 'constants.dart';
 import 'main_screen.dart';
-import 'screens/login_screen.dart';
 import 'models/snippets.dart';
 
 void main() {
@@ -32,15 +31,12 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         backgroundColor: Constants.backgroundColor,
         accentColor: Constants.accentColor,
-        // fontFamily: 'SourceSansPro',
         textTheme: TextTheme(
           headline3: TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 45.0,
-            // fontWeight: FontWeight.w400,
           ),
           button: TextStyle(
-            // OpenSans is similar to NotoSans but the uppercases look a bit better IMO
             fontFamily: 'OpenSans',
           ),
           caption: TextStyle(

@@ -43,6 +43,7 @@ dependencies:
   highlight: ^0.6.0
   rich_code_editor:
   file_picker:
+  salomon_bottom_bar:
 
 dev_dependencies:
   flutter_test:

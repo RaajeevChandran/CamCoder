@@ -10,14 +10,7 @@ class SyntaxHighlighter implements SyntaxHighlighterBase {
   TextEditingValue addTextRemotely(TextEditingValue oldValue, String newText) {
     return null;
   }
-
-  @override
-  TextEditingValue onBackSpacePress(
-      TextEditingValue oldValue, TextSpan currentSpan) {
-    return null;
-  }
-
-  @override
+   @override
   TextEditingValue onEnterPress(TextEditingValue oldValue) {
     var padding = "  ";
     var newText = oldValue.text + padding;
@@ -31,6 +24,13 @@ class SyntaxHighlighter implements SyntaxHighlighterBase {
     return newValue;
   }
 
+  @override
+  TextEditingValue onBackSpacePress(
+      TextEditingValue oldValue, TextSpan currentSpan) {
+    return null;
+  }
+
+ 
   List<TextSpan> _convert(List<Node> nodes) {
     final theme = themeMap['solarized-dark'];
 

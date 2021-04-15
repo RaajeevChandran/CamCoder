@@ -6,7 +6,7 @@ import 'constants.dart';
 import 'screens/edit_screen.dart';
 import 'screens/photo_screen.dart';
 import 'screens/snippets_screen.dart';
-import 'widgets/photo_code_bottom_navigation_bar.dart';
+import 'widgets/bottom_navigation_bar.dart';
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/main';
@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Constants.backgroundColor,
         appBar: PhotoCodeAppBar(),
         body: _getPage(this._currentPage),
-        bottomNavigationBar: PhotoCodeBottomNavigationBar(
+        bottomNavigationBar: CodeBottomNavigationBar(
           setPage: (position) {
             setState(() {
               this._currentPage = position;

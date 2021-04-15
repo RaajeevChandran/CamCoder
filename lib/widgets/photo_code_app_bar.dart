@@ -6,7 +6,7 @@ class PhotoCodeAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showBackButton;
   final String title;
 
-  PhotoCodeAppBar({this.showBackButton = false, this.title = "PhotoCode"});
+  PhotoCodeAppBar({this.showBackButton = false, this.title = "CamCoder"});
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +25,7 @@ class PhotoCodeAppBar extends StatelessWidget with PreferredSizeWidget {
                   Navigator.pop(context);
                 },
               )
-            : Hero(
-                tag: Constants.logoTag,
-                child: Image.asset(
-                  'assets/images/photocode.png',
-                  filterQuality: FilterQuality.high,
-                  height: 10,
-                  width: 10,
-                ),
-              ),
+            : null
       ),
       actions: [
         Padding(
