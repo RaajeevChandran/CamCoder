@@ -11,31 +11,6 @@ class SnippetsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      GFSearchBar(
-        searchBoxInputDecoration: InputDecoration(
-          fillColor: Constants.barBackgroundColor,
-          filled: true,
-          hintText: "Search for snippets",
-          hintStyle: TextStyle(
-            color: Constants.accentColor,
-          ),
-        ),
-        searchList: ["Dragon", "is", "a", "noob"],
-        searchQueryBuilder: (query, list) {
-          return list
-              .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-              .toList();
-        },
-        overlaySearchListItemBuilder: (item) {
-          return Container(
-            padding: EdgeInsets.all(8),
-            child: Text(
-              item,
-              style: TextStyle(fontSize: 18),
-            ),
-          );
-        },
-      ),
       Expanded(
         child: ListView.builder(
           itemCount: 2,
@@ -93,10 +68,7 @@ class SnippetsScreen extends StatelessWidget {
           content: Column(
             children: [
               Text(snippet.name),
-              Text(formatDate(
-                DateTime(2020, 05, 23),
-                [MM, ' ', d, ', ', yyyy, ' @ ', HH, ':', nn],
-              )),
+              
             ],
           ),
         ),

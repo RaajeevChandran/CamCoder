@@ -135,7 +135,42 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
               child: Container(
                 child: Column(
                   children: [
-                    Row(
+                    
+                    Column(
+                      children: [
+                        Text(
+                          "Code Output:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Visibility(
+                          visible: isExecutingCode,
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        Container(
+                          child: Text(
+                            _execOutput,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'RobotoMono',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
@@ -168,40 +203,6 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          "Code Output:",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        Visibility(
-                          visible: isExecutingCode,
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Text(
-                            _execOutput,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'RobotoMono',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),

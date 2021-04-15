@@ -12,12 +12,15 @@ import 'main_screen.dart';
 import 'models/snippets.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       systemNavigationBarColor:
           SystemUiOverlayStyle.dark.systemNavigationBarColor,
     ),
   );
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(MyApp());
 }

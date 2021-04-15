@@ -101,34 +101,28 @@ class _PhotoScreenState extends State<PhotoScreen> {
               height: 200,
               decoration: BoxDecoration(
                 color: Colors.black,
-                borderRadius: BorderRadius.all(Radius.circular(40)),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               child: _image != null
                   ? Image.file(_image, fit: BoxFit.contain)
                   : null,
-            ),
-            Spacer(),
-            GFButton(
+            ),Spacer(),
+            Row(children:[
+            ElevatedButton(
               onPressed: openSheet,
-              fullWidthButton: true,
-              shape: GFButtonShape.pills,
-              color: Constants.barBackgroundColor,
-              size: GFSize.LARGE,
-              child: Text("Select Image",
+              style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
+              child: Text("Select Code Image",
                   style: TextStyle(color: Constants.accentColor)),
             ),
             Spacer(),
-            GFButton(
+            ElevatedButton(
               onPressed: _image == null ? null : openEditor,
-              fullWidthButton: true,
-              shape: GFButtonShape.pills,
-              color: Constants.barBackgroundColor,
-              size: GFSize.LARGE,
+              style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
               child: processing
                   ? CircularProgressIndicator()
-                  : Text("Process Image",
+                  : Text("Run Code Image",
                       style: TextStyle(color: Constants.accentColor)),
-            ),
+            ),]),
             Spacer(),
             DropdownButton<String>(
                 value: _selectedLanguage,

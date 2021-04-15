@@ -2,6 +2,7 @@ import 'package:camcoder/screens/edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/theme_map.dart';
+import 'package:flutter_highlight/themes/github.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:camcoder/constants.dart';
@@ -20,9 +21,7 @@ class SnippetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = new Map<String, TextStyle>.from(themeMap['solarized-dark']);
-    theme["root"] = TextStyle(
-        backgroundColor: Constants.backgroundColor, color: Constants.textColor);
+    
     return Scaffold(
       appBar: PhotoCodeAppBar(showBackButton: true),
       backgroundColor: Constants.backgroundColor,
@@ -46,8 +45,8 @@ class SnippetScreen extends StatelessWidget {
           HighlightView(
             code,
             language: 'javascript',
-            theme: theme,
-            padding: EdgeInsets.all(12),
+            theme: githubTheme,
+            padding: EdgeInsets.all(10),
             textStyle: TextStyle(
               fontFamily: 'RobotoMono',
               fontSize: 16,
@@ -57,21 +56,19 @@ class SnippetScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Spacer(flex: 3),
-              GFButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder:(context)=>EditScreen()));
                 },
-                color: GFColors.PRIMARY,
-                text: "Edit",
-                icon: Icon(FontAwesomeIcons.pencilAlt),
+                child: Row(children:[Icon(Icons.edit),Text('Edit')]),
+                style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent))
               ),
               Spacer(),
-              GFButton(
+              ElevatedButton(
                 onPressed: () {
                 },
-                color: GFColors.SUCCESS,
-                text: "Execute",
-                icon: Icon(FontAwesomeIcons.code),
+                child: Row(children:[Icon(Icons.code_sharp),Text('Execute')]),
+                style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green.shade400))
               ),
               Spacer(flex: 3),
             ],
