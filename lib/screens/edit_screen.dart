@@ -66,6 +66,39 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Constants.backgroundColor,
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 5),
+              child: GFButton(
+                onPressed: () {
+                  executeCode();
+                },
+                text: "Execute",
+                icon: Icon(Icons.code),
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                color: GFColors.PRIMARY,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 5),
+              child: GFButton(
+                onPressed: () {
+                  Scaffold.of(context).showSnackBar(snackBar);
+                },
+                text: "Save",
+                icon: Icon(Icons.save),
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                color: GFColors.SUCCESS,
+              ),
+            ),
+          ],
+        ),
         body: Column(
           children: [
             Expanded(
@@ -133,76 +166,40 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
             Expanded(
               flex: 4,
               child: Container(
-                child: Column(
-                  children: [
-                    
-                    Column(
-                      children: [
-                        Text(
-                          "Code Output:",
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Code Output:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Visibility(
+                        visible: isExecutingCode,
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          _execOutput,
+                          textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
                             color: Colors.white,
+                            fontFamily: 'RobotoMono',
                           ),
                         ),
-                        SizedBox(height: 30),
-                        Visibility(
-                          visible: isExecutingCode,
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                        Container(
-                          child: Text(
-                            _execOutput,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'RobotoMono',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: GFButton(
-                            onPressed: () {
-                              executeCode();
-                            },
-                            text: "Execute",
-                            icon: Icon(Icons.code),
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                            color: GFColors.PRIMARY,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 5),
-                          child: GFButton(
-                            onPressed: () {
-                              Scaffold.of(context).showSnackBar(snackBar);
-                            },
-                            text: "Save",
-                            icon: Icon(Icons.save),
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                            color: GFColors.SUCCESS,
-                          ),
-                        ),
-                      ],
-                    ),
           ],
         ),
       ),

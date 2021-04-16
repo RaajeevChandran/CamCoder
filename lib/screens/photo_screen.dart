@@ -106,23 +106,31 @@ class _PhotoScreenState extends State<PhotoScreen> {
               child: _image != null
                   ? Image.file(_image, fit: BoxFit.contain)
                   : null,
-            ),Spacer(),
-            Row(children:[
-            ElevatedButton(
-              onPressed: openSheet,
-              style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
-              child: Text("Select Code Image",
-                  style: TextStyle(color: Constants.accentColor)),
             ),
             Spacer(),
-            ElevatedButton(
-              onPressed: _image == null ? null : openEditor,
-              style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
-              child: processing
-                  ? CircularProgressIndicator()
-                  : Text("Run Code Image",
-                      style: TextStyle(color: Constants.accentColor)),
-            ),]),
+            Row(children: [
+              ElevatedButton(
+                onPressed: openSheet,
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black)),
+                child: Text("Select Code Image",
+                    style:
+                        TextStyle(fontSize: 12, color: Constants.accentColor)),
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: _image == null ? null : openEditor,
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black)),
+                child: processing
+                    ? CircularProgressIndicator()
+                    : Text("Run Code Image",
+                        style: TextStyle(
+                            fontSize: 12, color: Constants.accentColor)),
+              ),
+            ]),
             Spacer(),
             DropdownButton<String>(
                 value: _selectedLanguage,
