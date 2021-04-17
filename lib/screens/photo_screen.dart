@@ -116,6 +116,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                                                         .toLowerCase(),
                                                     ocrResult:
                                                         snap.data.toString(),
+                                                        imageUrl: _image.path,
                                                   )));
                                     },
                                   ),

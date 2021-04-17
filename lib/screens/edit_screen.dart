@@ -1,7 +1,9 @@
+import 'package:camcoder/models/snippet.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:getflutter/getflutter.dart';
+import 'package:hive/hive.dart';
 import 'package:rich_code_editor/exports.dart';
 import "package:http/http.dart" as http;
 
@@ -11,18 +13,20 @@ import '../syntax_highlighter.dart';
 class EditScreen extends StatelessWidget {
   final String ocrResult;
   final String language;
-  EditScreen({this.ocrResult, this.language});
+  final String imageUrl;
+  EditScreen({this.ocrResult, this.language,this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    return DemoCodeEditor(language, ocrResult);
+    return DemoCodeEditor(language, ocrResult,imageUrl);
   }
 }
 
 class DemoCodeEditor extends StatefulWidget {
   final String language;
   final String ocrResult;
-  DemoCodeEditor(this.language, this.ocrResult);
+  final String imageUrl;
+  DemoCodeEditor(this.language, this.ocrResult,this.imageUrl);
   @override
   _DemoCodeEditorState createState() => _DemoCodeEditorState(ocrResult);
 }
@@ -41,7 +45,7 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
     _syntaxHighlighterBase = SyntaxHighlighter();
     _rec = RichCodeEditingController(_syntaxHighlighterBase, text: ocrResult);
   }
-
+  String snippetName = '';
   @override
   Widget build(BuildContext context) {
     final snackBar = SnackBar(
@@ -72,8 +76,13 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
             Padding(
               padding: EdgeInsets.only(left: 5),
               child: GFButton(
-                onPressed: () {
-                  Scaffold.of(context).showSnackBar(snackBar);
+                onPressed: () async {
+                  var box = await Hive.openBox('snips');
+                  Snippet snips = Snippet(code: _rec.text,name:snippetName,imageURL: widget.imageUrl);
+                  await box.put(snippetName,snips);
+                  print('saved');
+                  // ignore: deprecated_member_use
+                  Scaffold.of(context).showSnackBar(SnackBar(content:Text('Saved')));
                 },
                 text: "Save",
                 icon: Icon(Icons.save),
@@ -106,7 +115,6 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                             borderSide: BorderSide(color: Colors.white),
                           ),
                           labelText: "Snippet Name",
-                          hintText: "DragonHeSnippet3",
                           hintStyle: TextStyle(
                             color: Colors.white30,
                           ),
@@ -133,7 +141,11 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                           syntaxHighlighter: _syntaxHighlighterBase,
                           decoration: null,
                           maxLines: null,
-                          onChanged: (String s) {},
+                          onChanged: (String s) {
+                            setState(() {
+                              s = snippetName;
+                            });
+                          },
                           onBackSpacePress: (TextEditingValue oldValue) {},
                           onEnterPress: (TextEditingValue oldValue) {
                             var result =

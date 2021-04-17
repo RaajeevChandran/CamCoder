@@ -44,6 +44,8 @@ dependencies:
   rich_code_editor:
   file_picker:
   salomon_bottom_bar:
+  hive:
+  path_provider:
 
 dev_dependencies:
   flutter_test:

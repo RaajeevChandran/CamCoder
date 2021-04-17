@@ -5,13 +5,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:camcoder/screens/edit_screen.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import "package:http/http.dart" as http;
+import 'package:path_provider/path_provider.dart';
 import 'constants.dart';
 import 'main_screen.dart';
+import 'models/snippet.dart';
 import 'models/snippets.dart';
 
-void main() {
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -21,7 +25,12 @@ void main() {
   );
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
+      var path = await getApplicationDocumentsDirectory();
+      Hive
+      ..init(path.path)
+      ..registerAdapter(SnippetAdapter()));
+      
+  var box = await Hive.openBox('snips');
   runApp(MyApp());
 }
 
