@@ -8,34 +8,21 @@ import "package:http/http.dart" as http;
 import '../constants.dart';
 import '../syntax_highlighter.dart';
 
-class EditArguments {
+class EditScreen extends StatelessWidget {
   final String ocrResult;
-  EditArguments(this.ocrResult);
-}
-
-class EditScreen extends StatefulWidget {
-  final String ocrResult;
-  EditScreen({this.ocrResult});
-  @override
-  _EditScreenState createState() => _EditScreenState();
-}
-
-class _EditScreenState extends State<EditScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  final String language;
+  EditScreen({this.ocrResult, this.language});
 
   @override
   Widget build(BuildContext context) {
-    return DemoCodeEditor(widget.ocrResult);
+    return DemoCodeEditor(language, ocrResult);
   }
 }
 
 class DemoCodeEditor extends StatefulWidget {
+  final String language;
   final String ocrResult;
-  DemoCodeEditor(this.ocrResult);
+  DemoCodeEditor(this.language, this.ocrResult);
   @override
   _DemoCodeEditorState createState() => _DemoCodeEditorState(ocrResult);
 }
@@ -46,7 +33,6 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
   bool isExecutingCode = false;
 
   final String ocrResult;
-  String _codeToExec;
   _DemoCodeEditorState(this.ocrResult);
 
   @override
@@ -214,11 +200,14 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
       _execOutput = "";
     });
     Dio dio = new Dio();
+    String language = (widget.language == "Javascript"
+        ? "JAVASCRIPT_NODE" 
+        : (widget.language == "C++"
+            ? "CPP"
+            : (widget.language == "Java" ? "JAVA" : "PYTHON")));
     var response = await dio.post(
       "https://camcoderapi.herokuapp.com/api/run",
-      data: {
-        "code": _rec.text,
-      },
+      data: {"code": _rec.text, "language": language},
     );
     if (this.mounted) {
       setState(() {

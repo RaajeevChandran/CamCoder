@@ -60,6 +60,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
         context,
         MaterialPageRoute(
             builder: (context) => EditScreen(
+              language: _selectedLanguage,
                   ocrResult: result,
                 )));
   }
@@ -135,7 +136,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
             DropdownButton<String>(
                 value: _selectedLanguage,
                 dropdownColor: Constants.barBackgroundColor,
-                items: <String>['Javascript', 'More coming soon...']
+                items: <String>['Javascript', 'C++', 'Java', 'Python']
                     .map((String value) {
                   return new DropdownMenuItem<String>(
                     value: value,
