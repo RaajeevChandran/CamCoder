@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import '../constants.dart';
 
@@ -30,7 +31,10 @@ class PhotoCodeAppBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         Padding(
           padding: EdgeInsets.only(right: 10),
-          child: Icon(Icons.more_horiz, color: Constants.accentColor, size: 30),
+          child: GestureDetector(onTap:() async {
+            var box = await Hive.openBox('snips');
+            await box.delete('snipsName');
+          },child: Icon(Icons.more_horiz, color: Constants.accentColor, size: 30)),
         ),
       ],
       title: Text(

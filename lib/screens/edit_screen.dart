@@ -14,11 +14,11 @@ class EditScreen extends StatelessWidget {
   final String ocrResult;
   final String language;
   final String imageUrl;
-  EditScreen({this.ocrResult, this.language,this.imageUrl});
+  EditScreen({this.ocrResult, this.language, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    return DemoCodeEditor(language, ocrResult,imageUrl);
+    return DemoCodeEditor(language, ocrResult, imageUrl);
   }
 }
 
@@ -26,7 +26,7 @@ class DemoCodeEditor extends StatefulWidget {
   final String language;
   final String ocrResult;
   final String imageUrl;
-  DemoCodeEditor(this.language, this.ocrResult,this.imageUrl);
+  DemoCodeEditor(this.language, this.ocrResult, this.imageUrl);
   @override
   _DemoCodeEditorState createState() => _DemoCodeEditorState(ocrResult);
 }
@@ -45,6 +45,7 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
     _syntaxHighlighterBase = SyntaxHighlighter();
     _rec = RichCodeEditingController(_syntaxHighlighterBase, text: ocrResult);
   }
+
   String snippetName = '';
   @override
   Widget build(BuildContext context) {
@@ -78,11 +79,26 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
               child: GFButton(
                 onPressed: () async {
                   var box = await Hive.openBox('snips');
-                  Snippet snips = Snippet(code: _rec.text,name:snippetName,imageURL: widget.imageUrl);
-                  await box.put(snippetName,snips);
+                  Snippet snips = Snippet(
+                      code: _rec.text,
+                      name: snippetName,
+                      imageURL: widget.imageUrl);
+
+                  await box.put(snippetName, snips);
+                  List snipsName = box.get('snipsName');
+                  if(snipsName==null){
+                    setState(() {
+                      snipsName = [snippetName];
+                    });
+                  }else{
+                    setState(() {
+                    snipsName.add(snippetName);
+                  });
+                  }
+                  
+                  await box.put('snipsName', snipsName);
                   print('saved');
                   // ignore: deprecated_member_use
-                  Scaffold.of(context).showSnackBar(SnackBar(content:Text('Saved')));
                 },
                 text: "Save",
                 icon: Icon(Icons.save),
@@ -104,6 +120,11 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
                       child: TextField(
+                        onChanged: (s){
+                          setState(() {
+                            snippetName = s;
+                          });
+                        },
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -111,6 +132,7 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
+                          
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
@@ -141,11 +163,6 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
                           syntaxHighlighter: _syntaxHighlighterBase,
                           decoration: null,
                           maxLines: null,
-                          onChanged: (String s) {
-                            setState(() {
-                              s = snippetName;
-                            });
-                          },
                           onBackSpacePress: (TextEditingValue oldValue) {},
                           onEnterPress: (TextEditingValue oldValue) {
                             var result =

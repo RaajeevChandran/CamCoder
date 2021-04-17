@@ -28,9 +28,11 @@ Future<void> main() async {
       var path = await getApplicationDocumentsDirectory();
       Hive
       ..init(path.path)
-      ..registerAdapter(SnippetAdapter()));
-      
+      ..registerAdapter(SnippetAdapter());
+  List snipsName = ['yolo'];
+
   var box = await Hive.openBox('snips');
+  box.put('snipsName',snipsName);
   runApp(MyApp());
 }
 

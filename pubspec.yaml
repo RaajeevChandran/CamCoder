@@ -46,10 +46,13 @@ dependencies:
   salomon_bottom_bar:
   hive:
   path_provider:
+  lottie:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator:
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -63,7 +66,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/photocode.png
+    - assets/
 
   fonts:
     - family: OpenSans
