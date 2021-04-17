@@ -6,6 +6,7 @@ import 'package:getflutter/getflutter.dart';
 import 'package:camcoder/models/snippet.dart';
 import 'package:camcoder/models/snippets.dart';
 import 'package:hive/hive.dart';
+import 'package:lottie/lottie.dart';
 
 import '../constants.dart';
 import 'snippet_screen.dart';
@@ -50,6 +51,9 @@ class _SnippetsScreenState extends State<SnippetsScreen> {
                 case ConnectionState.waiting:
                   return CircularProgressIndicator();
                 case ConnectionState.done:
+                  if (snapshot.data.length == 0) {
+                    return Lottie.asset('assets/empty.json');
+                  }
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -92,8 +96,9 @@ class _SnippetsScreenState extends State<SnippetsScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => SnippetScreen(
+                          language: snapshot.data.language,
                           name: snapshot.data.name,
-                          image: FileImage(File(snapshot.data.imageURL)),
+                          imageUrl: snapshot.data.imageURL,
                           code: snapshot.data.code,
                         ),
                       ),
@@ -111,7 +116,7 @@ class _SnippetsScreenState extends State<SnippetsScreen> {
                 ),
               );
             default:
-              return Text('Something seriously went wrong');
+              return Text('Something seriously went');
           }
         });
   }

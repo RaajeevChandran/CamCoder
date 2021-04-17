@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:camcoder/screens/edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_highlight/themes/github.dart';
+import 'package:flutter_highlight/themes/vs2015.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:camcoder/constants.dart';
@@ -10,13 +13,14 @@ import 'package:camcoder/constants.dart';
 import '../widgets/photo_code_app_bar.dart';
 
 class SnippetScreen extends StatelessWidget {
-  final String name, code;
-  final ImageProvider image;
+  final String name, code,language;
+  final String imageUrl;
 
   SnippetScreen({
     @required this.name,
     @required this.code,
-    @required this.image,
+    @required this.imageUrl,
+    @required this.language
   });
 
   @override
@@ -40,12 +44,12 @@ class SnippetScreen extends StatelessWidget {
           Spacer(flex: 4),
           Container(
             height: 200,
-            child: Image(image: image),
+            child: Image(image:FileImage(File(imageUrl))),
           ),
           HighlightView(
             code,
-            language: 'javascript',
-            theme: githubTheme,
+            language: language,
+            theme: vs2015Theme,
             padding: EdgeInsets.all(10),
             textStyle: TextStyle(
               fontFamily: 'RobotoMono',
@@ -58,18 +62,13 @@ class SnippetScreen extends StatelessWidget {
               Spacer(flex: 3),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder:(context)=>EditScreen()));
+                  Navigator.push(context,MaterialPageRoute(builder:(context)=>EditScreen(ocrResult: code,language:language,imageUrl: imageUrl,)));
                 },
                 child: Row(children:[Icon(Icons.edit),Text('Edit')]),
                 style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent))
               ),
               Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                },
-                child: Row(children:[Icon(Icons.code_sharp),Text('Execute')]),
-                style:ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green.shade400))
-              ),
+              
               Spacer(flex: 3),
             ],
           ),

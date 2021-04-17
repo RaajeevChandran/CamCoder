@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:camcoder/models/snippet.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rich_code_editor/exports.dart';
 import "package:http/http.dart" as http;
 
@@ -11,10 +14,9 @@ import '../constants.dart';
 import '../syntax_highlighter.dart';
 
 class EditScreen extends StatelessWidget {
-  final String ocrResult;
-  final String language;
-  final String imageUrl;
-  EditScreen({this.ocrResult, this.language, this.imageUrl});
+  final String ocrResult,language,imageUrl,name;
+
+  EditScreen({this.ocrResult, this.language, this.imageUrl,this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -79,10 +81,16 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
               child: GFButton(
                 onPressed: () async {
                   var box = await Hive.openBox('snips');
+                  File _image = File(widget.imageUrl);
+                  Directory dir = await getApplicationDocumentsDirectory();
+                  File newImage = await _image.copy('${dir.path}/$snippetName.jpg');
                   Snippet snips = Snippet(
                       code: _rec.text,
                       name: snippetName,
-                      imageURL: widget.imageUrl);
+                      imageURL: newImage.path,
+                      language: widget.language,
+                      );
+
 
                   await box.put(snippetName, snips);
                   List snipsName = box.get('snipsName');

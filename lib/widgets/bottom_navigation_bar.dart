@@ -22,9 +22,9 @@ class _CodeBottomNavigationBarState extends State<CodeBottomNavigationBar> {
       curve: Curves.bounceInOut,
       currentIndex:_currentIndex,
       items: [
-        SalomonBottomBarItem(icon: Icon(Icons.code), title: Text('Saved Code'),selectedColor: Colors.orange),
+        SalomonBottomBarItem(icon: Icon(Icons.code), title: Text('Saved Code'),selectedColor: Colors.orange,unselectedColor: Colors.white),
         SalomonBottomBarItem(
-            icon: Icon(Icons.camera_alt), title: Text('Upload'),selectedColor: Colors.green,)
+            icon: Icon(Icons.camera_alt), title: Text('Upload'),selectedColor: Colors.green,unselectedColor: Colors.white)
       ],
       onTap: (i){
         widget.setPage(i);

@@ -29,7 +29,7 @@ Future<void> main() async {
       Hive
       ..init(path.path)
       ..registerAdapter(SnippetAdapter());
-  List snipsName = ['yolo'];
+  List snipsName = [];
 
   var box = await Hive.openBox('snips');
   box.put('snipsName',snipsName);

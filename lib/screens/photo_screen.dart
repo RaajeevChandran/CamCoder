@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:camcoder/constants.dart';
 import 'package:camcoder/screens/edit_screen.dart';
+import 'package:lottie/lottie.dart';
 import 'package:platform_action_sheet/platform_action_sheet.dart';
 import 'dart:async';
 import 'dart:io';
@@ -65,9 +66,9 @@ class _PhotoScreenState extends State<PhotoScreen> {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircularProgressIndicator(),
+                          Lottie.asset('assets/loading2.json'),
                           Text(
-                              "Extracting text from your beautiful Handwriting...")
+                              "Extracting text from image")
                         ],
                       );
                     case ConnectionState.done:
@@ -81,14 +82,17 @@ class _PhotoScreenState extends State<PhotoScreen> {
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircularProgressIndicator(),
+                                  Lottie.asset('assets/loading2.json'),
                                   Text(
-                                      "Detecting the source code of your Handwriting...")
+                                      "Detecting the source code")
                                 ],
                               );
                             case ConnectionState.done:
                               return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  
                                   Text(
                                       "Tap YES if you think I predicted it right!",
                                       style: TextStyle(
