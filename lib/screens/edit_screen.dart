@@ -200,14 +200,17 @@ class _DemoCodeEditorState extends State<DemoCodeEditor> {
       _execOutput = "";
     });
     Dio dio = new Dio();
-    String language = (widget.language == "Javascript"
-        ? "JAVASCRIPT_NODE" 
-        : (widget.language == "C++"
-            ? "CPP"
-            : (widget.language == "Java" ? "JAVA" : "PYTHON")));
+    Map<String, String> languageMap = {
+      "c": "C",
+      "javascript": "JAVASCRIPT_NODE",
+      "c++": "CPP",
+      "java": "JAVA",
+      "python": "PYTHON"
+    };
+    print("language is " + languageMap[widget.language]);
     var response = await dio.post(
       "https://camcoderapi.herokuapp.com/api/run",
-      data: {"code": _rec.text, "language": language},
+      data: {"code": _rec.text, "language": languageMap[widget.language]},
     );
     if (this.mounted) {
       setState(() {

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:camcoder/constants.dart';
 import 'package:camcoder/screens/edit_screen.dart';
 import 'package:platform_action_sheet/platform_action_sheet.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import "package:http/http.dart" as http;
 
 class PhotoScreen extends StatefulWidget {
@@ -17,7 +16,7 @@ class PhotoScreen extends StatefulWidget {
 
 class _PhotoScreenState extends State<PhotoScreen> {
   File _image;
-  String _ocrResult;
+  String processMessage = "";
   bool processing = false;
 
   String _selectedLanguage = "Javascript";
@@ -49,20 +48,150 @@ class _PhotoScreenState extends State<PhotoScreen> {
   }
 
   void openEditor() async {
-    setState(() {
-      processing = true;
-    });
-    String result = await ocrResult();
-    setState(() {
-      processing = false;
-    });
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => EditScreen(
-              language: _selectedLanguage,
-                  ocrResult: result,
-                )));
+    var formData =
+        FormData.fromMap({'file': await MultipartFile.fromFile(_image.path)});
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Container(
+              height: 400,
+              child: FutureBuilder(
+                future: Dio().post("https://camcoderapi.herokuapp.com/api/ocr",
+                    data: formData),
+                builder: (context, snap) {
+                  switch (snap.connectionState) {
+                    case ConnectionState.waiting:
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          Text(
+                              "Extracting text from your beautiful Handwriting...")
+                        ],
+                      );
+                    case ConnectionState.done:
+                      return FutureBuilder(
+                        future: Dio().post(
+                            'https://camcoderapi.herokuapp.com/api/detect',
+                            data: {'code': snap.data.toString()}),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(),
+                                  Text(
+                                      "Detecting the source code of your Handwriting...")
+                                ],
+                              );
+                            case ConnectionState.done:
+                              return Column(
+                                children: [
+                                  Text(
+                                      "Tap YES if you think I predicted it right!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800)),
+                                  SizedBox(height: 5),
+                                  Text("Is your code written in"),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    snapshot.data.toString().toUpperCase() +
+                                        " ?",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 28),
+                                  ),
+                                  SizedBox(height: 5),
+                                  ElevatedButton(
+                                    child: Text("YES"),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => EditScreen(
+                                                    language: snapshot.data
+                                                        .toString()
+                                                        .toLowerCase(),
+                                                    ocrResult:
+                                                        snap.data.toString(),
+                                                  )));
+                                    },
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text("OR",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      )),
+                                  SizedBox(height: 5),
+                                  Text(
+                                      "Choose from the list of languages below if I predicted it wrong"),
+                                  SizedBox(height: 5),
+                                  DropdownButton<String>(
+                                      value: _selectedLanguage,
+                                      dropdownColor:
+                                          Constants.barBackgroundColor,
+                                      items: <String>[
+                                        'Javascript',
+                                        'C++',
+                                        'C',
+                                        'Java',
+                                        'Python'
+                                      ].map((String value) {
+                                        return new DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value,
+                                              style: TextStyle(
+                                                  color:
+                                                      Constants.accentColor)),
+                                        );
+                                      }).toList(),
+                                      onChanged: (newSelection) {
+                                        changeLanguage(newSelection);
+                                      }),
+                                  SizedBox(height: 5),
+                                  ElevatedButton(
+                                      child: Text("Done"),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditScreen(
+                                                      language:
+                                                          _selectedLanguage
+                                                              .toLowerCase(),
+                                                      ocrResult:
+                                                          snap.data.toString(),
+                                                    )));
+                                      })
+                                ],
+                              );
+                            default:
+                              return Text("Err");
+                          }
+                        },
+                      );
+                    default:
+                      return Text("err");
+                  }
+                },
+              ),
+            ),
+          );
+
+          // setState(() {
+          //   processing = false;
+          // });
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => EditScreen(
+          //               language: _selectedLanguage,
+          //               ocrResult: result,
+          //             )));
+        });
   }
 
   Future<String> ocrResult() async {
@@ -133,20 +262,6 @@ class _PhotoScreenState extends State<PhotoScreen> {
               ),
             ]),
             Spacer(),
-            DropdownButton<String>(
-                value: _selectedLanguage,
-                dropdownColor: Constants.barBackgroundColor,
-                items: <String>['Javascript', 'C++', 'Java', 'Python']
-                    .map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value,
-                        style: TextStyle(color: Constants.accentColor)),
-                  );
-                }).toList(),
-                onChanged: (newSelection) {
-                  changeLanguage(newSelection);
-                }),
             Spacer(flex: 4),
           ],
         ),
