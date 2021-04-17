@@ -94,7 +94,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                                 children: [
                                   
                                   Text(
-                                      "Tap YES if you think I predicted it right!",
+                                      "Tap YES if it's right!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w800)),
                                   SizedBox(height: 5),
@@ -111,6 +111,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                                   ElevatedButton(
                                     child: Text("YES"),
                                     onPressed: () {
+                                      Navigator.pop(context);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -131,7 +132,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                                       )),
                                   SizedBox(height: 5),
                                   Text(
-                                      "Choose from the list of languages below if I predicted it wrong"),
+                                      "Choose from the list of languages below if it's wrong"),
                                   SizedBox(height: 5),
                                   DropdownButton<String>(
                                       value: _selectedLanguage,

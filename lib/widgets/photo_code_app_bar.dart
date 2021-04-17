@@ -28,15 +28,7 @@ class PhotoCodeAppBar extends StatelessWidget with PreferredSizeWidget {
               )
             : null
       ),
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: GestureDetector(onTap:() async {
-            var box = await Hive.openBox('snips');
-            await box.delete('snipsName');
-          },child: Icon(Icons.more_horiz, color: Constants.accentColor, size: 30)),
-        ),
-      ],
+      
       title: Text(
         title,
         style: TextStyle(
