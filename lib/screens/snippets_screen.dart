@@ -96,7 +96,7 @@ class _SnippetsScreenState extends State<SnippetsScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => SnippetScreen(
-                          language: snapshot.data.language,
+                          language:snapshot.data.language,
                           name: snapshot.data.name,
                           imageUrl: snapshot.data.imageURL,
                           code: snapshot.data.code,
